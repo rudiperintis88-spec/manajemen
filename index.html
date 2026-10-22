@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Perintis Sistem Management</title>
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#ffffff; --surface:#ffffff; --surface-2:#efede8; --line:#e7e4de;
+  --text:#16161a; --muted:#6b6b72; --row-hover:#efede8;
+  --red:#e11d2e; --red-2:#c4121f; --ink:#1b1a20; --green:#17874d; --amber:#c8780f;
+  --side:#1b1a20; --side-text:#e9e8ec; --side-muted:#8c8a94;
+  --blue:#2457e6; --copy:#c8780f;
+  --chip-amber-bg:#fdeacb; --chip-amber:#a35f08;
+  --chip-blue-bg:#dde8fd; --chip-blue:#1e47b8;
+  --chip-green-bg:#d6f2e2; --chip-green:#10683a;
+  --chip-red-bg:#fddadd; --chip-red:#a30f1c;
+  --chip-ok-bg:#e0f4e8;
+}
+@media not all{
+  :root:not([data-theme="light"]){
+    --bg:#121216; --surface:#1c1c22; --surface-2:#25252d; --line:#2e2e37;
+    --text:#f1f0f4; --muted:#9d9ca6; --row-hover:#25252d;
+    --chip-amber-bg:#3d2a0b; --chip-amber:#f2bd6b;
+    --chip-blue-bg:#16264f; --chip-blue:#9db9ff;
+    --chip-green-bg:#0f3321; --chip-green:#7fdcaa;
+    --chip-red-bg:#40121a; --chip-red:#ff9aa4;
+    --chip-ok-bg:#12301f;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121216; --surface:#1c1c22; --surface-2:#25252d; --line:#2e2e37;
+  --text:#f1f0f4; --muted:#9d9ca6; --row-hover:#25252d;
+  --chip-amber-bg:#3d2a0b; --chip-amber:#f2bd6b;
+  --chip-blue-bg:#16264f; --chip-blue:#9db9ff;
+  --chip-green-bg:#0f3321; --chip-green:#7fdcaa;
+  --chip-red-bg:#40121a; --chip-red:#ff9aa4;
+  --chip-ok-bg:#12301f;
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Inter","Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;font-size:14px;line-height:1.45}
+svg{display:block;flex:none}
+.layout{display:grid;grid-template-columns:270px 1fr;min-height:100vh}
+
+/* sidebar */
+.side{background:var(--side);color:var(--side-text);padding:18px 12px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow:auto}
+.brand{display:flex;gap:12px;align-items:center;padding:6px 8px 18px;border-bottom:1px solid #2c2b33;margin-bottom:14px}
+.logo{width:40px;height:40px;border-radius:12px;background:var(--red);display:grid;place-items:center;color:#fff;box-shadow:0 6px 16px rgba(225,29,46,.4)}
+.brand b{display:block;font-size:15px;line-height:1.2}
+.brand small{color:var(--side-muted);font-size:12px}
+.group-label{font-family:ui-monospace,"SF Mono",Consolas,monospace;font-size:11px;letter-spacing:.14em;color:var(--side-muted);padding:14px 10px 8px;text-transform:uppercase}
+.nav{display:flex;align-items:center;gap:12px;width:100%;padding:11px 12px;border:0;background:none;color:var(--side-text);border-radius:12px;font:inherit;font-weight:500;cursor:pointer;text-align:left}
+.nav:hover{background:#26252d}
+.nav.active{background:var(--red);color:#fff;font-weight:600;box-shadow:0 6px 16px rgba(225,29,46,.35)}
+.nav .count{margin-left:auto;background:#2c2b33;color:#bdbbc6;border-radius:8px;font-size:12px;padding:1px 8px;min-width:26px;text-align:center}
+.nav.active .count{background:rgba(255,255,255,.22);color:#fff}
+.side-foot{margin-top:auto;border-top:1px solid #2c2b33;padding:14px 10px 4px;font-size:12px;color:var(--side-muted)}
+.side-foot b{display:block;color:#cfcdd6;font-weight:500}
+
+/* main */
+.main{padding:22px 28px 40px;min-width:0}
+.top{display:flex;gap:16px;align-items:flex-start;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap}
+.top h1{margin:0;font-size:21px}
+.top p{margin:2px 0 0;color:var(--muted)}
+.tools{display:flex;gap:10px;align-items:center}
+.search{display:flex;align-items:center;gap:8px;background:var(--surface-2);border-radius:12px;padding:0 14px;height:40px;width:300px;color:var(--muted)}
+.search input{border:0;background:none;outline:0;font:inherit;color:var(--text);width:100%}
+.search:focus-within{outline:2px solid var(--blue)}
+.pill{display:inline-flex;align-items:center;gap:8px;background:var(--surface-2);border-radius:999px;padding:0 14px;height:36px;font-weight:600;white-space:nowrap}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--green)}
+.theme{border:0;background:var(--surface-2);color:var(--text);width:40px;height:40px;border-radius:12px;cursor:pointer;display:grid;place-items:center}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+.stat{border-radius:16px;padding:18px 20px;color:#fff;min-height:130px;display:flex;flex-direction:column;justify-content:space-between}
+.stat .ic{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.18);display:grid;place-items:center}
+.stat small{font-family:ui-monospace,"SF Mono",Consolas,monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;opacity:.85;display:block;margin-top:14px}
+.stat strong{font-size:27px;line-height:1.1;display:block;margin-top:2px}
+.s-red{background:linear-gradient(135deg,#e8202f,#cf1423)}
+.s-ink{background:linear-gradient(135deg,#2b2a32,#15141a)}
+.s-green{background:linear-gradient(135deg,#1c9a58,#137a43)}
+.s-amber{background:linear-gradient(135deg,#d9861b,#bd6f0c)}
+
+h2{font-size:17px;margin:0}
+.sub{color:var(--muted);margin:2px 0 14px}
+
+.table{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.scroll{overflow-x:auto}
+.grid{display:grid;grid-template-columns:minmax(250px,2.1fr) minmax(130px,1.1fr) minmax(250px,2.4fr) 90px 150px;align-items:center;gap:16px;padding:0 20px;min-width:860px}
+.thead{background:var(--surface-2);height:40px;font-family:ui-monospace,"SF Mono",Consolas,monospace;font-size:11px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+.row{height:68px;border-top:1px solid var(--line)}
+.row:hover{background:var(--row-hover)}
+.app{display:flex;gap:12px;align-items:center;min-width:0}
+.aicon{width:38px;height:38px;border-radius:11px;display:grid;place-items:center}
+.app b{display:block}
+.app span{color:var(--muted);font-size:13px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chip{display:inline-block;padding:3px 11px;border-radius:999px;font-weight:600;font-size:12.5px;white-space:nowrap}
+.c-amber{background:var(--chip-amber-bg);color:var(--chip-amber)}
+.c-blue{background:var(--chip-blue-bg);color:var(--chip-blue)}
+.c-green{background:var(--chip-green-bg);color:var(--chip-green)}
+.c-red{background:var(--chip-red-bg);color:var(--chip-red)}
+.url{font-family:ui-monospace,"SF Mono",Consolas,monospace;font-size:12.5px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-decoration:none}
+.url:hover{text-decoration:underline}
+.ok{display:inline-flex;gap:6px;align-items:center;background:var(--chip-ok-bg);color:var(--chip-green);font-weight:600;font-size:12.5px;padding:3px 10px;border-radius:999px}
+.ok i{width:6px;height:6px;border-radius:50%;background:var(--green)}
+.acts{display:flex;gap:8px}
+.btn{width:34px;height:34px;border-radius:9px;border:0;color:#fff;display:grid;place-items:center;cursor:pointer;text-decoration:none}
+.btn:focus-visible,.nav:focus-visible,.theme:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.b-view{background:var(--blue)} .b-copy{background:var(--copy)} .b-go{background:var(--red)}
+.btn:hover{filter:brightness(1.1)}
+.empty{padding:40px;text-align:center;color:var(--muted)}
+
+/* login */
+.login{position:fixed;inset:0;background:#fff;display:flex;align-items:center;justify-content:center;padding:20px;z-index:100}
+body:not(.locked) .login{display:none}
+body.locked .layout{display:none}
+.lbox{width:100%;max-width:340px;display:flex;flex-direction:column;gap:8px;color:#16161a}
+.lbox .logo{margin-bottom:10px}
+.lbox h1{margin:0;font-size:21px}
+.lbox p{margin:0 0 14px;color:#6b6b72}
+.lbox label{font-weight:600}
+.lbox input{height:44px;border:1px solid #d9d6cf;border-radius:10px;padding:0 14px;font:inherit;background:#fff;color:#16161a}
+.lbox input:focus{outline:2px solid var(--blue);outline-offset:1px}
+.lbox .txt{height:44px;margin-top:6px}
+.lerr{min-height:20px;color:#c4121f;font-weight:600;font-size:13px}
+.out{border:0;background:var(--surface-2);color:var(--text);height:36px;border-radius:999px;padding:0 14px;font:inherit;font-weight:600;cursor:pointer}
+
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(10,10,14,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:50}
+.modal.open{display:flex}
+.card{background:var(--surface);border-radius:18px;max-width:460px;width:100%;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.card h3{margin:0 0 4px;font-size:18px}
+.card dl{margin:16px 0;display:grid;grid-template-columns:110px 1fr;gap:10px 12px}
+.card dt{color:var(--muted)} .card dd{margin:0;font-weight:600;word-break:break-all}
+.card .foot{display:flex;gap:10px;justify-content:flex-end}
+.txt{border:0;border-radius:10px;padding:10px 16px;font:inherit;font-weight:600;cursor:pointer;text-decoration:none}
+.t-ghost{background:var(--surface-2);color:var(--text)} .t-red{background:var(--red);color:#fff}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:999px;font-weight:600;display:none;z-index:60}
+.toast.show{display:block}
+
+@media (max-width:1000px){
+  .stats{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:820px){
+  .layout{grid-template-columns:1fr}
+  .side{position:static;height:auto;flex-direction:row;flex-wrap:wrap;gap:6px;padding:12px}
+  .brand{width:100%;border:0;padding-bottom:6px;margin:0}
+  .group-label,.side-foot{display:none}
+  .nav{width:auto;padding:8px 12px}
+  .main{padding:18px 14px 32px}
+  .search{width:100%}
+  .tools{width:100%}
+}
+@media (prefers-reduced-motion:no-preference){ .btn,.nav{transition:filter .15s,background .15s} }
+/* tampilan terang */
+.lbox .lname{text-align:center;font-size:36px;margin:0 0 20px}
+.sr{position:absolute;left:-9999px}
+.side{background:#fff;color:#16161a;border-right:1px solid var(--line)}
+.brand{border-bottom-color:var(--line)}
+.brand small,.group-label,.side-foot{color:#8a8a92}
+.side-foot{border-top-color:var(--line)}
+.side-foot b{color:#3a3a42}
+.logo{box-shadow:none}
+.nav{color:#2a2a30}
+.nav:hover{background:#f3f2ef}
+.nav.active{background:#fde8ea;color:#c4121f;box-shadow:none}
+.nav .count{background:#f0efec;color:#6b6b72}
+.nav.active .count{background:#fff;color:#c4121f}
+.stat{color:#16161a;border:1px solid var(--line)}
+.stat .ic{background:#fff}
+.s-red{background:#fde8ea}.s-red .ic{color:#c4121f}
+.s-ink{background:#ececf0}.s-ink .ic{color:#2b2a32}
+.s-green{background:#dff3e8}.s-green .ic{color:#137a43}
+.s-amber{background:#fdf0d8}.s-amber .ic{color:#a35f08}
+.stat small{opacity:.7}
+</style>
+</head>
+<body class="locked">
+<div class="login">
+  <div class="lbox" id="loginForm">
+    <h1 class="lname">Perintis</h1>
+    <label for="gname" class="sr">Nama</label>
+    <input id="gname" type="text" placeholder="Nama" autocomplete="name" style="margin-bottom:8px">
+    <label for="pw" class="sr">Kata sandi</label>
+    <input id="pw" type="password" placeholder="Kata sandi" autocomplete="current-password" autocapitalize="off" autocorrect="off" spellcheck="false">
+    <div id="loginErr" class="lerr" role="alert"></div>
+    <button class="txt t-red" type="button" id="loginBtn">Masuk</button>
+  </div>
+</div>
+<div class="layout">
+  <aside class="side">
+    <div class="brand">
+      <div class="logo"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.1L3 17.7 6.3 21l6.3-6.3a4 4 0 0 0 5.1-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/></svg></div>
+      <div><b>Perintis<br>Sistem Management</b></div>
+    </div>
+    <div class="group-label">Menu</div>
+    <button class="nav active" data-g="all"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Dashboard<span class="count" id="c-all"></span></button>
+    <div class="group-label">Kelompok</div>
+    <div id="groupNav"></div>
+    <div class="side-foot">Toyota Authorized Service · v1.0</div>
+  </aside>
+
+  <main class="main">
+    <div class="top">
+      <div><h1>Dashboard</h1><p>Ringkasan seluruh aplikasi dashboard yang terhubung dalam satu portal.</p></div>
+      <div class="tools">
+        <label class="search"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" type="search" placeholder="Cari aplikasi..." aria-label="Cari aplikasi"></label>
+        <span class="pill"><span class="dot"></span>Semua aktif</span>
+        <button class="out" id="logout">Keluar</button>
+        
+      </div>
+    </div>
+
+    <section class="stats">
+      <div class="stat s-red"><div><div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div><small>Aplikasi terhubung</small></div><strong id="n-app">13</strong></div>
+      <div class="stat s-ink"><div><div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg></div><small>Kelompok pengguna</small></div><strong id="n-grp">5</strong></div>
+      <div class="stat s-green"><div><div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg></div><small>Status sistem</small></div><strong>Aktif</strong></div>
+      <div class="stat s-amber"><div><div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></div><small>Pembaruan terakhir</small></div><strong>15 Okt 2026</strong></div>
+    </section>
+
+    <h2>Semua Aplikasi</h2>
+    <p class="sub">Klik ikon mata untuk detail, atau buka langsung ke aplikasinya.</p>
+
+    <div class="table"><div class="scroll">
+      <div class="grid thead"><div>Aplikasi</div><div>Kelompok</div><div>Tautan</div><div>Status</div><div>Aksi</div></div>
+      <div id="rows"></div>
+    </div></div>
+  </main>
+</div>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="m-title">
+  <div class="card">
+    <h3 id="m-title"></h3><div id="m-desc" style="color:var(--muted)"></div>
+    <dl>
+      <dt>Kelompok</dt><dd id="m-grp"></dd>
+      <dt>Penanggung jawab</dt><dd id="m-pic"></dd>
+      <dt>Tautan</dt><dd id="m-url"></dd>
+      <dt>Status</dt><dd>Aktif</dd>
+    </dl>
+    <div class="foot"><button class="txt t-ghost" id="m-close">Tutup</button><button class="txt t-ghost" id="m-copy">Salin tautan</button><a class="txt t-red" id="m-open" target="_blank" rel="noopener">Buka aplikasi</a></div>
+  </div>
+</div>
+<div class="toast" id="toast">Tautan disalin</div>
+
+<script>
+const GROUPS = {
+  mgmt:  {name:"Manajemen",     chip:"c-red",   icon:'<path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/>'},
+  cab:   {name:"Cabang",        chip:"c-amber", icon:'<path d="M3 21h18M6 21V7h12v14M10 11h4M10 15h4"/>'},
+  spv:   {name:"Supervisor",    chip:"c-green", icon:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>'},
+  bkl:   {name:"Bengkel",       chip:"c-blue",  icon:'<path d="M14.7 6.3a4 4 0 0 0-5.4 5.1L3 17.7 6.3 21l6.3-6.3a4 4 0 0 0 5.1-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/>'},
+  audit: {name:"Audit",         chip:"c-red",   icon:'<path d="M9 11l3 3 8-8M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/>'}
+};
+const APPS = [
+  {n:"Management", d:"Ringkasan seluruh grup Perintis untuk manajemen.", g:"mgmt", pic:"Manajemen", u:"https://perintis-group.vercel.app/", ic:"amber"},
+  {n:"Operation Manager", d:"Dashboard piutang showroom semua cabang.", g:"mgmt", pic:"Operation Manager", u:"https://dashboard-piutang-showroom.vercel.app/", ic:"amber"},
+  {n:"Kepala Cabang Gatsu", d:"Dashboard piutang cabang Gatsu.", g:"cab", pic:"Hery Juntak", u:"https://dashboardpiutanggatsu.vercel.app/", ic:"amber"},
+  {n:"Kepala Cabang Flamboyan", d:"Dashboard piutang cabang Flamboyan.", g:"cab", pic:"Benny Leonardi", u:"https://piutangflamboyan.vercel.app/", ic:"amber"},
+  {n:"Kepala Cabang Gagak Hitam", d:"Dashboard piutang cabang Gagak Hitam.", g:"cab", pic:"Halim Lucas", u:"https://piutanggagakhitam.vercel.app/", ic:"amber"},
+  {n:"Supervisor Cabang Gatsu", d:"Pantauan BPKB dan piutang cabang Gatsu.", g:"spv", pic:"Supervisor Cabang Gatsu", u:"https://bpkb-piutang-gatsu.vercel.app/", ic:"green"},
+  {n:"Supervisor Flamboyan", d:"Pantauan BPKB dan piutang cabang Flamboyan.", g:"spv", pic:"Supervisor Flamboyan", u:"https://bpkb-piutang-flamboyan.vercel.app/", ic:"green"},
+  {n:"Supervisor Cabang Gagak Hitam", d:"Pantauan BPKB dan piutang cabang Gagak Hitam.", g:"spv", pic:"Supervisor Cabang Gagak Hitam", u:"https://bpkb-piutang-gagak.vercel.app/", ic:"green"},
+  {n:"Tanda Terima STNK", d:"Pencatatan tanda terima STNK kendaraan.", g:"audit", pic:"Rudi (Internal Audit)", u:"https://tandaterimastnk.vercel.app/", ic:"red"},
+  {n:"Kepala Bengkel Body Repair", d:"Dashboard material belum faktur Body Repair.", g:"bkl", pic:"Muhammad Rifai", u:"https://dashboardbp-seven.vercel.app/", ic:"blue"},
+  {n:"Kepala Bengkel GR Flamboyan", d:"Dashboard material belum faktur GR Flamboyan.", g:"bkl", pic:"Hardi", u:"https://gr-flamboyan-pf.vercel.app/", ic:"blue"},
+  {n:"Kepala Bengkel Adam Malik", d:"Dashboard material belum faktur GR Adam Malik.", g:"bkl", pic:"Muhammad Ridhowan", u:"https://adammalik.vercel.app/", ic:"blue"},
+  {n:"Audit SPK DO", d:"Pemeriksaan kesesuaian SPK dan DO.", g:"audit", pic:"Rudi (Internal Audit)", u:"https://audit-spk-do.vercel.app/", ic:"red"},
+  {n:"SPK Blank All Cabang", d:"Pantauan SPK blank semua cabang dan divisi.", g:"audit", pic:"Rudi (Internal Audit)", u:"https://spk-blank-semua-divisi.vercel.app/", ic:"red"}
+];
+const ICBG = {amber:"var(--chip-amber-bg);color:var(--chip-amber)",green:"var(--chip-green-bg);color:var(--chip-green)",blue:"var(--chip-blue-bg);color:var(--chip-blue)",red:"var(--chip-red-bg);color:var(--chip-red)"};
+const svg = (p,s=18)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+const host = u => u.replace(/^https?:\/\//,'').replace(/\/$/,'');
+let group = "all", query = "";
+
+document.getElementById('n-app').textContent = APPS.length;
+document.getElementById('n-grp').textContent = Object.keys(GROUPS).length;
+document.getElementById('c-all').textContent = APPS.length;
+
+const gn = document.getElementById('groupNav');
+gn.innerHTML = Object.entries(GROUPS).map(([k,v])=>
+  `<button class="nav" data-g="${k}">${svg(v.icon)}${v.name}<span class="count">${APPS.filter(a=>a.g===k).length}</span></button>`).join('');
+
+document.querySelectorAll('.nav').forEach(b=>b.addEventListener('click',()=>{
+  group=b.dataset.g;
+  document.querySelectorAll('.nav').forEach(x=>x.classList.toggle('active',x===b));
+  render();
+}));
+document.getElementById('q').addEventListener('input',e=>{query=e.target.value.trim().toLowerCase();render();});
+
+function render(){
+  const list = APPS.map((a,i)=>({...a,i})).filter(a=>(group==="all"||a.g===group) &&
+    (!query || (a.n+a.d+a.pic+a.u+GROUPS[a.g].name).toLowerCase().includes(query)));
+  const el = document.getElementById('rows');
+  if(!list.length){el.innerHTML='<div class="empty">Tidak ada aplikasi yang cocok. Coba kata kunci lain.</div>';return;}
+  el.innerHTML = list.map(a=>`
+  <div class="grid row">
+    <div class="app"><div class="aicon" style="background:${ICBG[a.ic]}">${svg(GROUPS[a.g].icon)}</div><div style="min-width:0"><b>${a.n}</b><span>${a.d}</span></div></div>
+    <div><span class="chip ${GROUPS[a.g].chip}">${GROUPS[a.g].name}</span></div>
+    <a class="url" href="${a.u}" target="_blank" rel="noopener">${host(a.u)}</a>
+    <div><span class="ok"><i></i>Aktif</span></div>
+    <div class="acts">
+      <button class="btn b-view" data-i="${a.i}" aria-label="Detail ${a.n}">${svg('<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',16)}</button>
+      <button class="btn b-copy" data-c="${a.i}" aria-label="Salin tautan ${a.n}">${svg('<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/>',16)}</button>
+      <a class="btn b-go" href="${a.u}" target="_blank" rel="noopener" aria-label="Buka ${a.n}">${svg('<path d="M7 17 17 7M8 7h9v9"/>',16)}</a>
+    </div>
+  </div>`).join('');
+  el.querySelectorAll('[data-i]').forEach(b=>b.addEventListener('click',()=>openModal(APPS[b.dataset.i])));
+  el.querySelectorAll('[data-c]').forEach(b=>b.addEventListener('click',()=>copy(APPS[b.dataset.c].u)));
+}
+
+let cur=null;
+const $=id=>document.getElementById(id);
+const m_title=$('m-title'),m_desc=$('m-desc'),m_grp=$('m-grp'),m_pic=$('m-pic'),m_url=$('m-url'),m_open=$('m-open'),m_close=$('m-close'),m_copy=$('m-copy');
+const modal=document.getElementById('modal');
+function openModal(a){
+  cur=a;
+  m_title.textContent=a.n; m_desc.textContent=a.d; m_grp.textContent=GROUPS[a.g].name;
+  m_pic.textContent=a.pic; m_url.textContent=a.u; m_open.href=a.u;
+  modal.classList.add('open'); m_close.focus();
+}
+const closeModal=()=>modal.classList.remove('open');
+m_close.addEventListener('click',closeModal);
+modal.addEventListener('click',e=>{if(e.target===modal)closeModal();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+m_copy.addEventListener('click',()=>cur&&copy(cur.u));
+
+function copy(t){
+  const done=()=>{toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1600);};
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(done,fallback);}else fallback();
+  function fallback(){const x=document.createElement('textarea');x.value=t;document.body.appendChild(x);x.select();try{document.execCommand('copy');}catch(e){}x.remove();done();}
+}
+
+
+const PASS="perintispp2026";
+const CABANG_NAME="Portal Sistem Management";
+const APPS_SCRIPT_URL="https://script.google.com/macros/s/AKfycbzggGiQKV0_odLfKqXtshav6Sg7vrlgt85jegYPyy8jNRhNqEfvSK-Q8xPNsGHIZFFxWA/exec";
+const NAMA_KATA_TERLARANG=["bpkb","gagak","hitam","gatsu","flamboyan","piutang","followup","follow","up","dashboard","cabang","cash","leasing","perintis","perkasa","test","tes","admin","nama","adam","malik","body","repair","otoxpert","material","portal","sistem","management"];
+function validName(v){
+  v=(v||'').trim();
+  if(!/^[A-Za-z.' -]+$/.test(v)) return false;
+  var words=v.split(/\s+/).filter(Boolean);
+  if(words.length<2) return false;
+  var lower=v.toLowerCase();
+  for(var i=0;i<NAMA_KATA_TERLARANG.length;i++){ if(lower.indexOf(NAMA_KATA_TERLARANG[i])>=0) return false; }
+  return true;
+}
+function sendLoginNotif(nama){
+  try{
+    fetch(APPS_SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({nama:nama,cabang:CABANG_NAME,waktu:new Date().toISOString()})});
+  }catch(e){}
+}
+function unlock(){document.body.classList.remove('locked');}
+function lock(){document.body.classList.add('locked');gname.focus();}
+try{sessionStorage.removeItem('pp_auth');}catch(e){}
+function tryLogin(){
+  var nama=gname.value.trim();
+  if(!nama){loginErr.textContent='Nama wajib diisi.';gname.focus();return;}
+  if(!validName(nama)){loginErr.textContent='Masukkan nama lengkap yang benar (minimal 2 kata).';gname.focus();return;}
+  if(pw.value.trim().toLowerCase()===PASS){pw.value='';loginErr.textContent='';sendLoginNotif(nama);unlock();}
+  else{loginErr.textContent='Password salah. Coba lagi.';pw.select();}
+}
+loginBtn.addEventListener('click',tryLogin);
+gname.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();pw.focus();}});
+pw.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();tryLogin();}});
+logout.addEventListener('click',()=>{try{sessionStorage.removeItem('pp_auth');}catch(x){} lock();});
+gname.focus();
+render();
+</script>
+</body>
+</html>
