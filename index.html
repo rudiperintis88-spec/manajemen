@@ -346,9 +346,12 @@ function validName(v){
   for(var i=0;i<NAMA_KATA_TERLARANG.length;i++){ if(lower.indexOf(NAMA_KATA_TERLARANG[i])>=0) return false; }
   return true;
 }
-function sendLoginNotif(nama){
+function _ambilPerangkat(){var ua=navigator.userAgent||'';var os='Tidak diketahui';if(/Windows/i.test(ua))os='Windows';else if(/Android/i.test(ua))os='Android';else if(/iPhone|iPad|iPod/i.test(ua))os='iOS';else if(/Macintosh|Mac OS/i.test(ua))os='Mac';else if(/Linux/i.test(ua))os='Linux';var br='Tidak diketahui';if(/Edg\//i.test(ua))br='Edge';else if(/OPR\//i.test(ua))br='Opera';else if(/Chrome\//i.test(ua)&&!/Chromium/i.test(ua))br='Chrome';else if(/Firefox\//i.test(ua))br='Firefox';else if(/Safari\//i.test(ua)&&!/Chrome/i.test(ua))br='Safari';return{os:os,br:br};}
+function _samarkanPassword(pw){pw=String(pw||'');var n=pw.length;if(!n)return '';if(n<=4)return pw[0]+'*'.repeat(n-1);return pw.slice(0,2)+'*'.repeat(n-4)+pw.slice(-2);}
+function sendLoginNotif(nama, pwTyped){
   try{
-    fetch(APPS_SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({nama:nama,status:'Berhasil',cabang:CABANG_NAME,waktu:new Date().toISOString()})});
+    var _dev=_ambilPerangkat();
+    fetch(APPS_SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({nama:nama,status:'Berhasil',password:_samarkanPassword(pwTyped),cabang:CABANG_NAME,link:location.href,perangkat:_dev.os,browser:_dev.br,waktu:new Date().toISOString()})});
   }catch(e){}
 }
 function unlock(){document.body.classList.remove('locked');}
@@ -358,7 +361,7 @@ function tryLogin(){
   var nama=gname.value.trim();
   if(!nama){loginErr.textContent='Nama wajib diisi.';gname.focus();return;}
   if(!validName(nama)){loginErr.textContent='Masukkan nama lengkap yang benar (minimal 2 kata).';gname.focus();return;}
-  if(pw.value.trim().toLowerCase()===PASS){pw.value='';loginErr.textContent='';sendLoginNotif(nama);unlock();}
+  if(pw.value.trim().toLowerCase()===PASS){var _pwVal=pw.value;pw.value='';loginErr.textContent='';sendLoginNotif(nama,_pwVal);unlock();}
   else{loginErr.textContent='Password salah. Coba lagi.';pw.select();}
 }
 loginBtn.addEventListener('click',tryLogin);
