@@ -335,7 +335,7 @@ function copy(t){
 
 const PASS="perintispp2026";
 const CABANG_NAME="Portal Sistem Management";
-const APPS_SCRIPT_URL="https://script.google.com/macros/s/AKfycbzggGiQKV0_odLfKqXtshav6Sg7vrlgt85jegYPyy8jNRhNqEfvSK-Q8xPNsGHIZFFxWA/exec";
+const APPS_SCRIPT_URL="https://script.google.com/macros/s/AKfycbwbp9NpdaXOEzXBImJvcjReKK8BrQRuwrXy3Jtk89dFEc1LuepeKrF6f6utr2k2Hl5qDg/exec";
 const NAMA_KATA_TERLARANG=["bpkb","gagak","hitam","gatsu","flamboyan","piutang","followup","follow","up","dashboard","cabang","cash","leasing","perintis","perkasa","test","tes","admin","nama","adam","malik","body","repair","otoxpert","material","portal","sistem","management"];
 function validName(v){
   v=(v||'').trim();
@@ -348,7 +348,7 @@ function validName(v){
 }
 function sendLoginNotif(nama){
   try{
-    fetch(APPS_SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({nama:nama,cabang:CABANG_NAME,waktu:new Date().toISOString()})});
+    fetch(APPS_SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({nama:nama,status:'Berhasil',cabang:CABANG_NAME,waktu:new Date().toISOString()})});
   }catch(e){}
 }
 function unlock(){document.body.classList.remove('locked');}
