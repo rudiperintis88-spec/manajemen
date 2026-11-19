@@ -218,7 +218,7 @@ body.locked .layout{display:none}
       <div class="stat s-red"><div><div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div><small>Aplikasi terhubung</small></div><strong id="n-app">18</strong></div>
       <div class="stat s-ink"><div><div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg></div><small>Kelompok pengguna</small></div><strong id="n-grp">6</strong></div>
       <div class="stat s-green"><div><div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg></div><small>Status sistem</small></div><strong>Aktif</strong></div>
-      <div class="stat s-amber"><div><div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></div><small>Pembaruan terakhir</small></div><strong id="n-upd">19 Nov 2026</strong></div>
+      <div class="stat s-amber"><div><div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></div><small>Pembaruan terakhir</small></div><strong id="n-upd">-</strong></div>
     </section>
 
     <h2>Semua Aplikasi</h2>
@@ -254,8 +254,8 @@ const GROUPS = {
   audit: {name:"Audit",         chip:"c-red",   icon:'<path d="M9 11l3 3 8-8M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/>'},
   partman:{name:"Partman",       chip:"c-blue",  icon:'<path d="M21 8 12 3 3 8v8l9 5 9-5zM3 8l9 5 9-5M12 13v8"/>'}
 };
-// Ubah tanggal ini setiap kali mengubah daftar aplikasi
-const LAST_UPDATE = "19 Nov 2026";
+// Diisi otomatis saat deploy oleh build.js (jangan diubah)
+const LAST_UPDATE = "__TGL__";
 const APPS = [
   {n:"Management", d:"Ringkasan seluruh grup Perintis untuk manajemen.", g:"mgmt", pic:"Manajemen", u:"https://perintis-group.vercel.app/", ic:"amber"},
   {n:"Operation Manager", d:"Dashboard piutang showroom semua cabang.", g:"mgmt", pic:"Operation Manager", u:"https://dashboard-piutang-showroom.vercel.app/", ic:"amber"},
@@ -283,7 +283,7 @@ let group = "all", query = "";
 
 document.getElementById('n-app').textContent = APPS.length;
 document.getElementById('n-grp').textContent = Object.keys(GROUPS).length;
-document.getElementById('n-upd').textContent = LAST_UPDATE;
+document.getElementById('n-upd').textContent = LAST_UPDATE.indexOf('__')===0 ? '-' : LAST_UPDATE;
 document.getElementById('c-all').textContent = APPS.length;
 
 const gn = document.getElementById('groupNav');
