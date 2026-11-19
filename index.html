@@ -254,8 +254,10 @@ const GROUPS = {
   audit: {name:"Audit",         chip:"c-red",   icon:'<path d="M9 11l3 3 8-8M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/>'},
   partman:{name:"Partman",       chip:"c-blue",  icon:'<path d="M21 8 12 3 3 8v8l9 5 9-5zM3 8l9 5 9-5M12 13v8"/>'}
 };
-// Diisi otomatis saat deploy oleh build.js (jangan diubah)
-const LAST_UPDATE = "__TGL__";
+// Tanggal cadangan (dipakai jika tanggal otomatis tidak bisa dibaca)
+const LAST_UPDATE = "19 Nov 2026";
+// Opsional: isi "pemilik/nama-repo" GitHub (repo harus public) agar tanggal diambil dari commit terakhir
+const GITHUB_REPO = "";
 const APPS = [
   {n:"Management", d:"Ringkasan seluruh grup Perintis untuk manajemen.", g:"mgmt", pic:"Manajemen", u:"https://perintis-group.vercel.app/", ic:"amber"},
   {n:"Operation Manager", d:"Dashboard piutang showroom semua cabang.", g:"mgmt", pic:"Operation Manager", u:"https://dashboard-piutang-showroom.vercel.app/", ic:"amber"},
@@ -283,7 +285,26 @@ let group = "all", query = "";
 
 document.getElementById('n-app').textContent = APPS.length;
 document.getElementById('n-grp').textContent = Object.keys(GROUPS).length;
-document.getElementById('n-upd').textContent = LAST_UPDATE.indexOf('__')===0 ? '-' : LAST_UPDATE;
+(function(){
+  var el = document.getElementById('n-upd');
+  el.textContent = LAST_UPDATE;
+  var BLN = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+  function fmt(d){ return d.getDate()+' '+BLN[d.getMonth()]+' '+d.getFullYear(); }
+  function ok(d){ return d instanceof Date && !isNaN(d) && d.getFullYear() > 2000; }
+  // 1) Tanggal file dari server (header Last-Modified), bila tersedia
+  fetch(location.href, {method:'HEAD', cache:'no-store'}).then(function(r){
+    var lm = r.headers.get('last-modified'), d = lm ? new Date(lm) : null;
+    if (ok(d)) { el.textContent = fmt(d); return; }
+    throw new Error('no-lm');
+  }).catch(function(){
+    // 2) Commit terakhir di GitHub, bila GITHUB_REPO diisi
+    if (!GITHUB_REPO) return;
+    fetch('https://api.github.com/repos/'+GITHUB_REPO+'/commits?per_page=1').then(function(r){return r.json();}).then(function(j){
+      var d = new Date(j[0].commit.committer.date);
+      if (ok(d)) el.textContent = fmt(d);
+    }).catch(function(){});
+  });
+})();
 document.getElementById('c-all').textContent = APPS.length;
 
 const gn = document.getElementById('groupNav');
